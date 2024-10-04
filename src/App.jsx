@@ -1,6 +1,8 @@
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
+import Home from './pages/Home';
+import Details from './pages/Details';
 
 
 function App() {
@@ -9,9 +11,8 @@ function App() {
     <Router>
       <Layout>
         <Routes>
-          {/* <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="*" element={<Navigate to="/" />} /> */}
+          <Route path="/" element={<Home />} />
+          <Route path="/details/:name" element={<Details />} />
         </Routes>
       </Layout>
     </Router>
