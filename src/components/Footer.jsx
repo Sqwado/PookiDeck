@@ -18,7 +18,7 @@ const Footer = () => {
             className="bg-white dark:bg-stone-900 p-4 text-center"
         >
             <p className="text-gray-600 dark:text-stone-300">
-                &copy; {new Date().getFullYear()} PookiDeck
+                &copy; {new Date().getFullYear()} PookiDeck - {t('footer.madeWith')} <a className='text-blue-500 dark:text-blue-300 hover:underline' target="_blank" href="https://github.com/Sqwado">Sqwado</a>
             </p>
         </motion.footer>
     );

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 
 const ThemeContext = createContext();
 
@@ -21,10 +21,10 @@ export const ThemeProvider = ({ children }) => {
             setIsDarkMode(e.matches);
         };
 
-        mediaQuery.addListener(handleSystemThemeChange);
+        mediaQuery.addEventListener('change', handleSystemThemeChange);
 
         return () => {
-            mediaQuery.removeListener(handleSystemThemeChange);
+            mediaQuery.removeEventListener('change', handleSystemThemeChange);
         };
     }, []);
 
@@ -38,8 +38,10 @@ export const ThemeProvider = ({ children }) => {
         setIsDarkMode((prev) => !prev);
     };
 
+    const contextValue = useMemo(() => ({ isDarkMode, toggleTheme }), [isDarkMode]);
+
     return (
-        <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
+        <ThemeContext.Provider value={contextValue}>
             {children}
         </ThemeContext.Provider>
     );

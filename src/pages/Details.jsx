@@ -4,13 +4,17 @@ import { usePokemon } from '../context/PokemonContext';
 import { useParams } from 'react-router-dom';
 import TypeBox from '../components/TypeBox';
 import BackBtn from '../components/BackBtn';
+import { useTranslation } from 'react-i18next';
+import DocumentTitle from '../utils/DocumentTitle';
 
 const Details = () => {
 
-    const { pokemon, getPokemon } = usePokemon();
-    const { name } = useParams();
+    const { t, i18n } = useTranslation();
 
-    const selectedPokemon = getPokemon(name);
+    const { pokemon, getById } = usePokemon();
+    const { id } = useParams();
+
+    const selectedPokemon = getById(id);
 
     if (!selectedPokemon) {
         return (
@@ -23,14 +27,16 @@ const Details = () => {
         );
     }
 
+    DocumentTitle("PokideX - " + selectedPokemon.names[i18n.language]);
+
     return (
         <div className="p-4">
             <BackBtn />
             <div className="flex justify-center items-center">
-                <h1 className="text-3xl font-semibold text-black dark:text-white">{selectedPokemon.names.en}</h1>
+                <h1 className="text-3xl font-semibold text-black dark:text-white">{selectedPokemon.names[i18n.language]}</h1>
             </div>
             <div className="flex justify-center">
-                <img src={selectedPokemon.image} alt={selectedPokemon.names.en} className="w-40 h-40" />
+                <img src={selectedPokemon.image} alt={selectedPokemon.names[i18n.language]} className="w-40 h-40" />
             </div>
             <div className="flex justify-center w-full">
                 {selectedPokemon.types.map((type, index) => (

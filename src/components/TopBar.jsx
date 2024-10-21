@@ -3,6 +3,7 @@ import React from 'react';
 import Logo from '../assets/logo.svg';
 import { Link } from 'react-router-dom';
 import SwitchTheme from './SwitchTheme';
+import LanguageSelector from './LanguageSelector';
 
 const TopBar = () => {
     return (
@@ -12,7 +13,7 @@ const TopBar = () => {
             </Link>
             <div className="flex items-center space-x-4">
                 <SwitchTheme />
-                <p>FR SW</p>
+                <LanguageSelector />
             </div>
         </div>
     );

@@ -3,10 +3,13 @@ import React from 'react';
 import { usePokemon } from '../context/PokemonContext';
 import Search from '../components/home/Search';
 import PokeCard from '../components/home/PokeCard';
+import DocumentTitle from '../utils/DocumentTitle';
 
 const Home = () => {
 
     const { pokemon, loading, firstItemRef, lastItemRef } = usePokemon();
+
+    DocumentTitle('PokideX - Accueil');
 
     return (
         <div>

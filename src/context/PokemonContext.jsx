@@ -1,11 +1,14 @@
 
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
-import { NormalizeString } from '../utils/normalizeString';
+import { NormalizeString } from '../utils/NormalizeString';
+import { useTranslation } from 'react-i18next';
 
 const PokemonContext = createContext();
 
 export const PokemonProvider = ({ children }) => {
+
+    const { t, i18n } = useTranslation();
 
     const PAGES_TO_LOAD = 3;
     const [pokemon, setPokemon] = useState([]);
@@ -59,9 +62,15 @@ export const PokemonProvider = ({ children }) => {
     }, [pokemonLoaded, typesLoaded]);
 
     const searchPokemon = (search) => {
+        console.log(Object.keys(pokemon[0].names));
         const filteredPokemon = pokemon.filter(pokemon => {
-            return NormalizeString(pokemon.names.en).includes(NormalizeString(search));
+            return Object.values(pokemon.names).some(name =>
+                NormalizeString(name).includes(NormalizeString(search))
+            );
         });
+        // const filteredPokemon = pokemon.filter(pokemon => {
+        //     return NormalizeString(pokemon.names[i18n.language]).includes(NormalizeString(search));
+        // });
         setFilteredPokemon(filteredPokemon);
         setCurrentPage(1); // Reset to first page on new search
         setVisiblePages([1]); // Reset visible pages
@@ -84,7 +93,11 @@ export const PokemonProvider = ({ children }) => {
     }
 
     const getPokemon = (name) => {
-        return pokemon.find(pokemon => pokemon.names.en === name);
+        return pokemon.find(pokemon => NormalizeString(pokemon.names.en) === NormalizeString(name));
+    }
+
+    const getById = (id) => {
+        return pokemon.find(pokemon => pokemon.id === parseInt(id, 10));
     }
 
     useEffect(() => {
@@ -207,6 +220,7 @@ export const PokemonProvider = ({ children }) => {
             search,
             getType,
             getPokemon,
+            getById,
             currentPage,
             itemsPerPage,
             totalItems: filteredPokemon.length,
@@ -220,9 +234,10 @@ export const PokemonProvider = ({ children }) => {
             {showScrollTopButton && (
                 <button
                     onClick={scrollToTop}
-                    className='fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg border-none cursor-pointer 
+                    className='fixed bottom-16 md:bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg border-none cursor-pointer 
                     hover:bg-gray-700 dark:bg-gray-200 dark:text-gray-800'>
-                    ↑ Back to Top
+                    <span>↑</span>
+                    <span className='hidden md:inline-block ml-2'>Back to Top</span>
                 </button>
             )}
 
