@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Select } from "@chakra-ui/react";
+import { Select, MenuItem } from "@mui/material";
 
 const LanguageSelector = () => {
     const { i18n } = useTranslation();
@@ -16,16 +16,49 @@ const LanguageSelector = () => {
     };
 
     return (
-
-        <Select value={selectedLanguage} onChange={changeLanguage}
-            className="bg-stone-200 dark:bg-stone-600 dark:text-white rounded-xl shadow-md">
-            <option value="ja">日本語</option>
-            <option value="ko">한국어</option>
-            <option value="fr">Français</option>
-            <option value="de">Deutsch</option>
-            <option value="es">Español</option>
-            <option value="it">Italiano</option>
-            <option value="en">English</option>
+        <Select
+            style={{ width: "150px" }}
+            sx={{
+                width: '270px',
+                backgroundColor: 'rgb(0 0 0 / 30%)',
+                color: 'white',
+                borderRadius: '10px',
+                '& .MuiSelect-select': {
+                    padding: '10px',
+                    paddingRight: '30px',
+                },
+                '& .MuiSelect-icon': {
+                    color: 'white',
+                    right: '10px',
+                },
+            }}
+            value={selectedLanguage}
+            onChange={changeLanguage}
+            variant="outlined"
+            className="dark:text-white rounded-xl border border-white m-0"
+            MenuProps={{
+                PaperProps: {
+                    style: {
+                        maxHeight: 300, width: 270,
+                        backgroundColor: 'transparent', backdropFilter: 'blur(10px)', borderRadius: '10px'
+                    }
+                }
+            }}
+        >
+            <MenuItem className=" dark:text-white"
+                value="ja">日本語</MenuItem>
+            <MenuItem className="dark:text-white"
+                value="ko">한국어</MenuItem>
+            <MenuItem className="dark:text-white"
+                value="fr">Français</MenuItem>
+            <MenuItem className="dark:text-white"
+                value="de">Deutsch</MenuItem>
+            <MenuItem className="dark:text-white"
+                value="es">Español</MenuItem>
+            <MenuItem className="dark:text-white"
+                value="it">Italiano</MenuItem>
+            <MenuItem className="dark:text-white"
+                value="en">English</MenuItem>
         </Select>
     );
 };
