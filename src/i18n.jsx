@@ -1,5 +1,6 @@
+
 import i18n from 'i18next';
-import { initReactI18next  } from 'react-i18next';
+import { initReactI18next } from 'react-i18next';
 
 // Importation des fichiers de traduction principaux
 import translationEN from './locales/en/translation.json';
@@ -20,11 +21,11 @@ const initI18n = async () => {
 
 
     i18n
-        .use(initReactI18next )
+        .use(initReactI18next)
         .init({
             resources,
-            lng: 'fr', // langue par défaut
-            fallbackLng: 'en',
+            lng: localStorage.getItem('i18nextLng') || 'en', // langue par défaut
+            fallbackLng: 'en', // langue de secours
             interpolation: {
                 escapeValue: false // React se charge de la protection contre les failles XSS
             }

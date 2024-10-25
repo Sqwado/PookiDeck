@@ -11,9 +11,9 @@ const TypeBox = ({ type }) => {
     const typeInfo = getType(type);
 
     return (
-        <div className="rounded-full p-2 shadow-md border-2 border-black dark:border-white w-24 mx-auto flex justify-center items-center"
-            style={{ backgroundColor: typeInfo.backgroundColor }}>
-            <span className="text-black dark:text-white text-center text-sm font-semibold tex-center uppercase">{typeInfo.translations[i18n.language]}</span>
+        <div className="rounded-xl p-2 shadow-md border-2 border-black dark:border-white w-24 mx-auto flex justify-center items-center"
+            style={{ backgroundColor: typeInfo?.backgroundColor }}>
+            <span className="text-black dark:text-white text-center text-sm font-semibold tex-center uppercase">{typeInfo?.translations[i18n.language]}</span>
         </div>
     );
 }
