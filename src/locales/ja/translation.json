@@ -2,7 +2,13 @@
     "nav": {
         "backtop": "トップに戻る"
     },
+    "details": {
+        "size": "サイズ",
+        "weight": "重さ",
+        "moves": "動き"
+    },
     "footer": {
         "madeWith": "❤️で作られた"
-    }
+    },
+    "close": "閉じる"
 }

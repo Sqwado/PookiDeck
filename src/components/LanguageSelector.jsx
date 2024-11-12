@@ -17,9 +17,7 @@ const LanguageSelector = () => {
 
     return (
         <Select
-            style={{ width: "150px" }}
             sx={{
-                width: '270px',
                 backgroundColor: 'rgb(0 0 0 / 30%)',
                 color: 'white',
                 borderRadius: '10px',
@@ -39,26 +37,39 @@ const LanguageSelector = () => {
             MenuProps={{
                 PaperProps: {
                     style: {
-                        maxHeight: 300, width: 270,
+                        maxHeight: 300,
                         backgroundColor: 'transparent', backdropFilter: 'blur(10px)', borderRadius: '10px'
                     }
                 }
-            }}
-        >
-            <MenuItem className=" dark:text-white"
-                value="ja">日本語</MenuItem>
-            <MenuItem className="dark:text-white"
-                value="ko">한국어</MenuItem>
-            <MenuItem className="dark:text-white"
-                value="fr">Français</MenuItem>
-            <MenuItem className="dark:text-white"
-                value="de">Deutsch</MenuItem>
-            <MenuItem className="dark:text-white"
-                value="es">Español</MenuItem>
-            <MenuItem className="dark:text-white"
-                value="it">Italiano</MenuItem>
-            <MenuItem className="dark:text-white"
-                value="en">English</MenuItem>
+            }}>
+            <MenuItem className=" dark:text-white" value="ja">
+                <span className="sm:hidden">JA</span>
+                <span className="hidden sm:inline">日本語</span>
+            </MenuItem>
+            <MenuItem className="dark:text-white" value="ko">
+                <span className="sm:hidden">KO</span>
+                <span className="hidden sm:inline">한국어</span>
+            </MenuItem>
+            <MenuItem className="dark:text-white" value="fr">
+                <span className="sm:hidden">FR</span>
+                <span className="hidden sm:inline">Français</span>
+            </MenuItem>
+            <MenuItem className="dark:text-white" value="de">
+                <span className="sm:hidden">DE</span>
+                <span className="hidden sm:inline">Deutsch</span>
+            </MenuItem>
+            <MenuItem className="dark:text-white" value="es">
+                <span className="sm:hidden">ES</span>
+                <span className="hidden sm:inline">Español</span>
+            </MenuItem>
+            <MenuItem className="dark:text-white" value="it">
+                <span className="sm:hidden">IT</span>
+                <span className="hidden sm:inline">Italiano</span>
+            </MenuItem>
+            <MenuItem className="dark:text-white" value="en">
+                <span className="sm:hidden">EN</span>
+                <span className="hidden sm:inline">English</span>
+            </MenuItem>
         </Select>
     );
 };

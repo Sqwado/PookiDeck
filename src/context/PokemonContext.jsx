@@ -19,6 +19,10 @@ export const PokemonProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [types, setTypes] = useState([]);
 
+    const [filterTypes, setFilterTypes] = useState([]);
+    const [someEveryType, setSomeEveryType] = useState(true);
+
+
     // Pagination states
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(16);
@@ -61,20 +65,16 @@ export const PokemonProvider = ({ children }) => {
         }
     }, [pokemonLoaded, typesLoaded]);
 
-    const searchPokemon = (search) => {
-        console.log(Object.keys(pokemon[0].names));
+    const searchPokemon = useCallback((search) => {
         const filteredPokemon = pokemon.filter(pokemon => {
             return Object.values(pokemon.names).some(name =>
                 NormalizeString(name).includes(NormalizeString(search))
             );
         });
-        // const filteredPokemon = pokemon.filter(pokemon => {
-        //     return NormalizeString(pokemon.names[i18n.language]).includes(NormalizeString(search));
-        // });
         setFilteredPokemon(filteredPokemon);
         setCurrentPage(1); // Reset to first page on new search
         setVisiblePages([1]); // Reset visible pages
-    }
+    }, [pokemon]);
 
     const clearSearch = () => {
         setFilteredPokemon(pokemon);
@@ -83,10 +83,10 @@ export const PokemonProvider = ({ children }) => {
         setVisiblePages([1]); // Reset visible pages
     }
 
-    const handleChange = (e) => {
-        setSearch(e.target.value);
-        searchPokemon(e.target.value);
-    }
+    const handleChange = useCallback((value) => {
+        setSearch(value);
+        searchPokemon(value);
+    }, [searchPokemon]);
 
     const getType = (name) => {
         return types[name];
@@ -227,7 +227,11 @@ export const PokemonProvider = ({ children }) => {
             paginate: loadMorePages,
             firstItemRef,
             lastItemRef,
-            handleNavigation
+            handleNavigation,
+            filterTypes,
+            setFilterTypes,
+            someEveryType,
+            setSomeEveryType
         }}>
             {children}
 

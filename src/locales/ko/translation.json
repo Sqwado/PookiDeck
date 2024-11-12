@@ -2,7 +2,13 @@
     "nav": {
         "backtop": "맨 위로 돌아가기"
     },
+    "details": {
+        "size": "크기",
+        "weight": "무게",
+        "moves": "움직임"
+    },
     "footer": {
         "madeWith": "❤️로 만든"
-    }
+    },
+    "close": "닫기"
 }

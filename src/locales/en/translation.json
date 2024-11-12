@@ -2,7 +2,13 @@
     "nav": {
         "backtop": "Back to top"
     },
+    "details": {
+        "size": "Size",
+        "weight": "Weight",
+        "moves": "Moves"
+    },
     "footer": {
         "madeWith": "made with ❤️ by"
-    }
+    },
+    "close": "Close"
 }

@@ -1,8 +1,14 @@
 {
-    "nav":{
-        "backtop":"Retour en haut"
+    "nav": {
+        "backtop": "Retour en haut"
+    },
+    "details": {
+        "size": "Taille",
+        "weight": "Poids",
+        "moves": "Mouvements"
     },
     "footer": {
         "madeWith": "fabriqué avec ❤️ par"
-    }
+    },
+    "close": "Fermer"
 }
