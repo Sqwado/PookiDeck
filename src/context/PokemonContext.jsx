@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { NormalizeString } from '../utils/NormalizeString';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 const PokemonContext = createContext();
 
 export const PokemonProvider = ({ children }) => {
-
     const { t, i18n } = useTranslation();
 
     const PAGES_TO_LOAD = 3;
@@ -18,21 +16,18 @@ export const PokemonProvider = ({ children }) => {
     const [typesLoaded, setTypesLoaded] = useState(false);
     const [loading, setLoading] = useState(true);
     const [types, setTypes] = useState([]);
-
     const [filterTypes, setFilterTypes] = useState([]);
     const [someEveryType, setSomeEveryType] = useState(true);
 
-
-    // Pagination states
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(16);
     const [visiblePages, setVisiblePages] = useState([1]);
 
     const observer = useRef();
     const topObserver = useRef();
-    const [showScrollTopButton, setShowScrollTopButton] = useState(false); // New state for button visibility
+    const [showScrollTopButton, setShowScrollTopButton] = useState(false);
 
-    const fetchPokemon = async () => {
+    const fetchPokemon = useCallback(async () => {
         setPokemonLoaded(false);
         try {
             const response = await axios.get('https://pokedex-jgabriele.vercel.app/pokemons.json');
@@ -43,9 +38,9 @@ export const PokemonProvider = ({ children }) => {
         } finally {
             setPokemonLoaded(true);
         }
-    }
+    }, []);
 
-    const fetchTypes = async () => {
+    const fetchTypes = useCallback(async () => {
         setTypesLoaded(false);
         try {
             const response = await axios.get('https://pokedex-jgabriele.vercel.app/types.json');
@@ -55,7 +50,7 @@ export const PokemonProvider = ({ children }) => {
         } finally {
             setTypesLoaded(true);
         }
-    }
+    }, []);
 
     useEffect(() => {
         if (pokemonLoaded && typesLoaded) {
@@ -65,40 +60,53 @@ export const PokemonProvider = ({ children }) => {
         }
     }, [pokemonLoaded, typesLoaded]);
 
-    const searchPokemon = useCallback((search) => {
+    const debounce = (func, delay) => {
+        let timeoutId;
+        return (...args) => {
+            if (timeoutId) clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                func(...args);
+            }, delay);
+        };
+    };
+
+    const searchPokemon = useCallback(debounce(() => {
         const filteredPokemon = pokemon.filter(pokemon => {
             return Object.values(pokemon.names).some(name =>
                 NormalizeString(name).includes(NormalizeString(search))
             );
+        }).filter(pokemon => {
+            return filterTypes.length === 0 || someEveryType
+                ? filterTypes.every(type => pokemon.types.includes(type))
+                : filterTypes.some(type => pokemon.types.includes(type));
         });
         setFilteredPokemon(filteredPokemon);
-        setCurrentPage(1); // Reset to first page on new search
-        setVisiblePages([1]); // Reset visible pages
-    }, [pokemon]);
+        setCurrentPage(1);
+        setVisiblePages([1]);
+    }, 300), [pokemon, search, filterTypes, someEveryType]);
 
-    const clearSearch = () => {
+    useEffect(() => {
+        searchPokemon();
+    }, [pokemon, search, filterTypes, someEveryType]);
+
+    const clearSearch = useCallback(() => {
         setFilteredPokemon(pokemon);
         setSearch('');
-        setCurrentPage(1); // Reset to first page on clear search
-        setVisiblePages([1]); // Reset visible pages
-    }
+        setCurrentPage(1);
+        setVisiblePages([1]);
+    }, [pokemon]);
 
-    const handleChange = useCallback((value) => {
-        setSearch(value);
-        searchPokemon(value);
-    }, [searchPokemon]);
-
-    const getType = (name) => {
+    const getType = useCallback((name) => {
         return types[name];
-    }
+    }, [types]);
 
-    const getPokemon = (name) => {
+    const getPokemon = useCallback((name) => {
         return pokemon.find(pokemon => NormalizeString(pokemon.names.en) === NormalizeString(name));
-    }
+    }, [pokemon]);
 
-    const getById = (id) => {
+    const getById = useCallback((id) => {
         return pokemon.find(pokemon => pokemon.id === parseInt(id, 10));
-    }
+    }, [pokemon]);
 
     useEffect(() => {
         const savedPage = sessionStorage.getItem('currentPage');
@@ -110,23 +118,18 @@ export const PokemonProvider = ({ children }) => {
 
         if (savedScrollPosition) {
             window.scrollTo(0, parseInt(savedScrollPosition, 10));
-            sessionStorage.removeItem('scrollPosition'); // Supprime la position après l'avoir utilisée
+            sessionStorage.removeItem('scrollPosition');
         }
 
         fetchPokemon();
         fetchTypes();
-    }, []);
-
-    // Pagination logic
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredPokemon.slice(indexOfFirstItem, indexOfLastItem);
+    }, [fetchPokemon, fetchTypes]);
 
     const loadMorePages = useCallback(() => {
         setVisiblePages(prevPages => {
             const nextPage = Math.max(...prevPages) + 1;
             if (nextPage <= Math.ceil(filteredPokemon.length / itemsPerPage)) {
-                return [...prevPages, nextPage].slice(-PAGES_TO_LOAD); // Keep only the last PAGES_TO_LOAD pages
+                return [...prevPages, nextPage].slice(-PAGES_TO_LOAD);
             }
             return prevPages;
         });
@@ -135,29 +138,26 @@ export const PokemonProvider = ({ children }) => {
     const loadPreviousPages = useCallback(() => {
         setVisiblePages(prevPages => {
             const prevPage = Math.min(...prevPages) - 1;
-            // Check if the previous page is greater than 0 before loading
             if (prevPage > 0) {
-                return [prevPage, ...prevPages].slice(0, PAGES_TO_LOAD); // Keep only the first PAGES_TO_LOAD pages
+                return [prevPage, ...prevPages].slice(0, PAGES_TO_LOAD);
             }
-            return prevPages; // Do nothing if already on the first page
+            return prevPages;
         });
     }, []);
 
     const firstItemRef = useCallback(node => {
-        if (loading || visiblePages.includes(1)) return; // Don't observe if already on the first page
+        if (loading || visiblePages.includes(1)) return;
 
         if (topObserver.current) topObserver.current.disconnect();
 
-        // Root margin added to trigger earlier during scroll
         topObserver.current = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting) {
-                loadPreviousPages(); // Load previous pages when scrolling up
+                loadPreviousPages();
             }
-        }, { rootMargin: '200px' }); // Adjust this margin if needed
+        }, { rootMargin: '200px' });
 
         if (node) topObserver.current.observe(node);
     }, [loading, visiblePages, loadPreviousPages]);
-
 
     const lastItemRef = useCallback(node => {
         if (loading) return;
@@ -170,25 +170,24 @@ export const PokemonProvider = ({ children }) => {
         if (node) observer.current.observe(node);
     }, [loading, loadMorePages]);
 
-    // Show or hide "scroll to top" button depending on scroll position
-    const handleScroll = () => {
+    const handleScroll = useCallback(() => {
         if (window.scrollY > 300) {
             setShowScrollTopButton(true);
         } else {
             setShowScrollTopButton(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, []);
+    }, [handleScroll]);
 
-    const scrollToTop = () => {
-        const scrollDuration = 400; // Durée en millisecondes (1000ms = 1 seconde)
-        const scrollStep = -window.scrollY / (scrollDuration / 15); // Calcul du pas de défilement
+    const scrollToTop = useCallback(() => {
+        const scrollDuration = 400;
+        const scrollStep = -window.scrollY / (scrollDuration / 15);
 
         const scrollInterval = setInterval(() => {
             if (window.scrollY !== 0) {
@@ -196,28 +195,28 @@ export const PokemonProvider = ({ children }) => {
             } else {
                 clearInterval(scrollInterval);
             }
-        }, 15); // Appelle la fonction toutes les 15 millisecondes
-    };
+        }, 15);
+    }, []);
 
-    const handleNavigation = () => {
-        // Enregistre la page actuelle et la position de défilement
+    const handleNavigation = useCallback(() => {
         sessionStorage.setItem('currentPage', currentPage);
         sessionStorage.setItem('scrollPosition', window.scrollY);
-    };
+    }, [currentPage]);
 
-    const paginatedItems = visiblePages.flatMap(page => {
+    const paginatedItems = useMemo(() => visiblePages.flatMap(page => {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
         return filteredPokemon.slice(start, end);
-    });
+    }), [visiblePages, filteredPokemon, itemsPerPage]);
 
     return (
         <PokemonContext.Provider value={{
             pokemon: paginatedItems,
             types,
             clearSearch,
-            handleChange,
+            // handleChange,
             search,
+            setSearch,
             getType,
             getPokemon,
             getById,
@@ -244,7 +243,6 @@ export const PokemonProvider = ({ children }) => {
                     <span className='hidden md:inline-block ml-2'>Back to Top</span>
                 </button>
             )}
-
         </PokemonContext.Provider>
     );
 }

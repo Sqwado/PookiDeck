@@ -7,6 +7,15 @@
         "weight": "Weight",
         "moves": "Moves"
     },
+    "filter": {
+        "button": "Filter",
+        "title": "Filter Pokémon",
+        "some": "Some",
+        "every": "Every",
+        "types": "Types",
+        "reset": "Reset",
+        "apply": "Apply"
+    },
     "footer": {
         "madeWith": "made with ❤️ by"
     },

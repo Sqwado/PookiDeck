@@ -7,6 +7,15 @@
         "weight": "重さ",
         "moves": "動き"
     },
+    "filter": {
+        "button": "フィルター",
+        "title": "ポケモンをフィルター",
+        "some": "いくつか",
+        "every": "すべて",
+        "types": "タイプ",
+        "reset": "リセット",
+        "apply": "適用"
+    },
     "footer": {
         "madeWith": "❤️で作られた"
     },

@@ -4,6 +4,7 @@ import { usePokemon } from '../context/PokemonContext';
 import Search from '../components/home/Search';
 import PokeCard from '../components/home/PokeCard';
 import DocumentTitle from '../utils/DocumentTitle';
+import TopBar from '../components/TopBar';
 
 const Home = () => {
 
@@ -13,6 +14,7 @@ const Home = () => {
 
     return (
         <div>
+            <TopBar />
             <Search />
 
             <div ref={firstItemRef}></div>

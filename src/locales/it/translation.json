@@ -7,6 +7,15 @@
         "weight": "Peso",
         "moves": "Mosse"
     },
+    "filter": {
+        "button": "Filtra",
+        "title": "Filtra i Pokémon",
+        "some": "Alcuni",
+        "every": "Tutti",
+        "types": "Tipi",
+        "reset": "Reimposta",
+        "apply": "Applica"
+    },
     "footer": {
         "madeWith": "fatto con ❤️ da"
     },

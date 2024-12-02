@@ -7,6 +7,15 @@
         "weight": "Gewicht",
         "moves": "Bewegungen"
     },
+    "filter": {
+        "button": "Filtern",
+        "title": "Pokémon filtern",
+        "some": "Einige",
+        "every": "Alle",
+        "types": "Typen",
+        "reset": "Zurücksetzen",
+        "apply": "Anwenden"
+    },
     "footer": {
         "madeWith": "hergestellt mit ❤️ von"
     },

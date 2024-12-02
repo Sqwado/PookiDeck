@@ -9,18 +9,17 @@ const Search = () => {
     const searchRef = createRef();
     const updateSearchParam = useUpdateSearchParam();
 
-    const { search, handleChange, clearSearch } = usePokemon();
+    const { search, setSearch, clearSearch } = usePokemon();
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        const initialSearch = searchParams.get('search') || '';
-        handleChange(initialSearch);  // Set the search value on initial render or when searchParams change
-    }, [searchParams, handleChange]);
+        setSearch(searchParams.get('search') || '');
+    }, [searchParams]);
 
     const handleSearch = (e) => {
         const value = e.target.value;
         updateSearchParam('search', value);
-        handleChange(value);
+        setSearch(value);
     };
 
     useEffect(() => {
@@ -44,7 +43,10 @@ const Search = () => {
                         <Button
                             variant="ghost"
                             className="bg-stone-200 bg-transparent w-full h-full shadow-xl"
-                            onClick={clearSearch}                        >
+                            onClick={() => {
+                                clearSearch();
+                                updateSearchParam('search', '');
+                            }}>
                             <CloseIcon className="text-black dark:text-white" />
                         </Button>
                     </InputRightElement>

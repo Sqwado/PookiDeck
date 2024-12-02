@@ -12,23 +12,28 @@ const Item = React.memo(({ item, underline = true, selected = false, selectMulti
     const { i18n } = useTranslation();
 
     return (
-        <ListItem
-            sx={{
-                backgroundColor: selected ? 'rgb(0 0 44)' : item.backgroundColor || 'black',
-                color: 'white',
-                cursor: 'pointer',
-                '&:hover': { opacity: '0.8' },
-                ...(underline ? { '&:not(:last-child)': { borderBottom: '1px solid rgb(59 130 246)' } } : {})
-            }}
-            onClick={() => selectMultiple ? clickHandler(item.id) : handleChange(item)}>
-            {selectMultiple && (
-                <Checkbox
-                    checked={multipleSelectedItems.includes(item.id)}
-                    value={item.id}
-                    sx={{ color: 'white', '&.Mui-checked': { color: 'rgb(59 130 246)' } }} />
-            )}
-            <ListItemText primary={item.translations[i18n.language] || item.name} />
-        </ListItem>
+        <div className='border-2 border-black dark:border-white rounded-lg m-1'>
+            <ListItem
+                sx={{
+                    borderRadius: '7px',
+                    backgroundColor: selected ? 'rgb(0 0 44)' : item.backgroundColor || 'black',
+                    color: 'white',
+                    cursor: 'pointer',
+                    '&:hover': { opacity: '0.8' },
+                    // ...(underline ? { '&:not(:last-child)': { borderBottom: '1px solid rgb(59 130 246)' } } : {})
+                }}
+                onClick={() => selectMultiple ? clickHandler(item.id) : handleChange(item)}>
+                {selectMultiple && (
+                    <Checkbox
+                        checked={multipleSelectedItems.includes(item.id)}
+                        value={item.id}
+                        sx={{ color: 'white', '&.Mui-checked': { color: 'rgb(0 0 0)' } }} />
+                )}
+                <p className='text-black dark:text-white font-bold text-lg'>
+                    {item.translations[i18n.language] || item.name}
+                </p>
+            </ListItem>
+        </div>
     );
 }, (prevProps, nextProps) => {
     return (
@@ -72,27 +77,29 @@ const Foldable = ({
     }, [setSelectedItems]);
 
     return (
-        <div className="flex flex-col justify-center w-full border-2 border-blue-500 rounded-lg bg-white dark:bg-black dark:border-blue-500 shadow-lg
+        <div className="flex flex-col justify-center w-full border-2 border-black dark:border-white rounded-lg bg-white dark:bg-black shadow-lg
         min-w-[270px]">
             <ListItemButton
                 onClick={handleToggleOpen}  // Only toggle when clicking the ListItemButton
                 sx={{
-                    color: 'white', borderRadius: '6px', borderBottom: '2px solid rgb(59 130 246)'
+                    color: 'white', borderRadius: '7px'
                 }}>
                 {displayName && <ListItemText className="text-black dark:text-white"
                     primary={displayName} />}
                 <Item item={selectedItem} underline={false} selected={false} />
                 {selectMultiple && (
-                    <p className="text-md bg-blue-500 text-white dark:text-black rounded-lg shadow-md p-2 text-center">
+                    <p className="text-md bg-black dark:bg-white
+                     text-white dark:text-black rounded-lg shadow-md p-2 text-center">
                         {multipleSelectedItems.length}/{items.length}
                     </p>
                 )}
-                {colapseable && (open ? <ExpandLess /> : <ExpandMore />)}
+                {colapseable && (open ? <ExpandLess className="text-black dark:text-white" /> : <ExpandMore className="text-black dark:text-white" />)}
             </ListItemButton>
 
-            <Collapse in={open} timeout="auto" unmountOnExit sx={{ backgroundColor: 'black', color: 'white', borderRadius: '10px', maxHeight: '20rem', overflowY: 'auto' }}>
+            <Collapse in={open} timeout="auto" unmountOnExit sx={{ maxHeight: '20rem', overflowY: 'auto' }}
+                className="rounded-lg border-2 border-black dark:border-white shadow-lg">
                 {showSearch && (
-                    <ListItem key="search" className="flex items-center justify-between" sx={{ backgroundColor: 'transparent', color: 'white', cursor: 'pointer', paddingX: '0.25rem', '&:hover': { backgroundColor: 'rgb(0 0 44)' } }}>
+                    <ListItem key="search" className="flex items-center justify-between" sx={{ backgroundColor: 'transparent', color: 'white', cursor: 'pointer', paddingX: '1rem' }}>
                         <InputGroup>
                             <Input
                                 autoComplete='off'
@@ -100,9 +107,9 @@ const Foldable = ({
                                 placeholder="Rechercher"
                                 onChange={(e) => setSearch(e.target.value)}
                                 value={search}
-                                className="mt-0 w-full"
+                                className="w-full h-10 px-3 rounded-lg shadow-md bg-white dark:bg-black text-black dark:text-white"
                                 border={1} />
-                            <InputRightElement h="100%" w="3rem">
+                            <InputRightElement h="100%" w="3.5rem">
                                 <Button variant="ghost" onClick={() => setSearch('')}>
                                     <CloseIcon />
                                 </Button>
@@ -112,7 +119,7 @@ const Foldable = ({
                 )}
                 <List sx={{ padding: '0' }}>
                     {items.length === 0 && (
-                        <ListItem sx={{ backgroundColor: 'black', color: 'white', padding: '0.75rem' }}>
+                        <ListItem sx={{ padding: '0.75rem' }}>
                             <ListItemText primary="Aucun élément trouvé" />
                         </ListItem>
                     )}

@@ -7,6 +7,15 @@
         "weight": "무게",
         "moves": "움직임"
     },
+    "filter": {
+        "button": "필터",
+        "title": "포켓몬 필터링",
+        "some": "일부",
+        "every": "모두",
+        "types": "유형",
+        "reset": "재설정",
+        "apply": "적용"
+    },
     "footer": {
         "madeWith": "❤️로 만든"
     },
